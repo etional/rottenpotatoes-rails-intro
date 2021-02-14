@@ -5,7 +5,7 @@ class Movie < ActiveRecord::Base
   # if ratings_list is nil, retrieve ALL movies
     if ratings_list.kind_of?(Array)
       ratings_list.each do |rating|
-        Movie.find_all_by_rating(rating)
+        Movie.find_by_rating(rating)
       end
     end
     if ratings_list == nil
