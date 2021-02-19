@@ -10,4 +10,8 @@ class Movie < ActiveRecord::Base
       return Movie.all
     end
   end
+  def self.all_ratings()
+  # return all possible values of a movie rating
+    return ['G', 'PG', 'PG-13', 'R']
+  end
 end

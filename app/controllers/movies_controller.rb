@@ -7,14 +7,34 @@ class MoviesController < ApplicationController
   end
 
   def index
-    ratings = params[:ratings]
     @ratings_to_show = []
-    if ratings != nil
-      ratings = ratings.keys
-      @ratings_to_show = ratings
+    if params[:home].nil? and params[:commit].nil? # the user got to the home page from someplace else
+      ratings = session[:ratings]
+      header = session[:header]
+    else
+      ratings = params[:ratings]
+      header = params[:header]
+      session[:ratings] = params[:ratings]
+      session[:header] = params[:header]
     end
-    @movies = Movie.with_ratings(ratings)
-    @all_ratings = ['G', 'PG', 'PG-13', 'R']
+    if not ratings.nil?
+      ratings_key = ratings.keys
+      @ratings_to_show = ratings_key
+    end
+
+    @movies = Movie.with_ratings(ratings_key)
+    @all_ratings = Movie.all_ratings()
+
+    @ratings_hash = Hash[@ratings_to_show.collect { |rating| [rating, 1]}]
+    @title_header = ''
+    @release_date_header = ''
+    if header == 'title_header'
+      @title_header = 'hilite bg-warning'
+      @movies = @movies.order('title')
+    elsif header == 'release_date_header'
+      @release_date_header = 'hilite bg-warning'
+      @movies = @movies.order('release_date')
+    end
   end
 
   def new
