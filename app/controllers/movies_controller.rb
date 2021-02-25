@@ -9,6 +9,9 @@ class MoviesController < ApplicationController
   def index
     @ratings_to_show = []
     if params[:home].nil? and params[:commit].nil? # the user got to the home page from someplace else
+      if !request.fullpath.include? "movies"
+        session.clear
+      end
       ratings = session[:ratings]
       header = session[:header]
     else
